@@ -43,21 +43,36 @@
         return m ? m[1] : null;
     }
 
-    // ex: "Over 100 people clicked apply", "100+ people applied"
-    const APPLY_TEXT_RE = /\b(?:over\s*)?\d+\+?\s*people\s*(?:clicked\s*apply|applied)\b/i;
+    function getApplyContainer() {
+        return (
+            document.querySelector('.job-details-jobs-unified-top-card__tertiary-description-container') ||
+            document.querySelector('.jobs-unified-top-card__primary-description') ||
+            document.querySelector('.job-details-jobs-unified-top-card__primary-description-container') ||
+            document.body
+        );
+    }
 
     function findApplyLeafSpan(root) {
-        const spans = root.querySelectorAll(
-            'span.tvm_text, span.tvm__text, span[class*="tvm_text"], span[class*="tvm__text"], .jobs-unified-top-card__primary-description span, .job-details-jobs-unified-top-card__tertiary-description-container span'
-        );
-        for (const s of spans) {
-            if (s.children.length === 0) {
-                const txt = (s.textContent || "").trim();
-                if (APPLY_TEXT_RE.test(txt)) return s;
-            }
+        // prefer the right container if we can find it
+        const container = getApplyContainer() || root;
+
+        // all leaf spans (no element children)
+        const leafSpans = Array.from(
+            container.querySelectorAll('span')
+        ).filter(s => s.children.length === 0);
+
+        // pick the last leaf span that has at least one digit (language-agnostic)
+        const withDigits = leafSpans.filter(s => /\d/.test((s.textContent || '').trim()));
+        if (withDigits.length) return withDigits[withDigits.length - 1];
+
+        // fallback: last visible leaf span
+        for (let i = leafSpans.length - 1; i >= 0; i--) {
+            const s = leafSpans[i];
+            if (s.offsetParent !== null) return s;
         }
         return null;
     }
+
 
     // Revert any prior injections (used on navigation before new stats arrive)
     function resetInjectedText() {
