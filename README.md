@@ -14,7 +14,7 @@ No more vague “Over 100 people applied” — get the real stats instantly.
 
 ## Installation
 
-1. **Install from Chrome Web Store**: [Chrome Web Store Link](PLACEHOLDER_CHROME_STORE_LINK)
+1. **Install from Chrome Web Store**: [Chrome Web Store Link](https://chromewebstore.google.com/detail/linkedin-job-stats/mmlljgngdpkedeimjjobakikkkfgined)
 2. Open any LinkedIn job posting.
 3. See the real-time apply & view numbers instantly.
 
